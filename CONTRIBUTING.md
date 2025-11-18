@@ -4,7 +4,7 @@
 
 1. Required software: git and node.
 2. Recommended editor: Visual Studio Code.
-3. You can also use GitHub Codespaces which sets up everything for youuu.
+3. You can also use GitHub Codespaces which sets up everything for meme.
 
 ## Getting the code ready
 
