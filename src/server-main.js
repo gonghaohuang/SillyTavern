@@ -59,6 +59,7 @@ import {
 } from './util.js';
 import { UPLOADS_DIRECTORY } from './constants.js';
 import { ensureThumbnailCache } from './endpoints/thumbnails.js';
+import { router as publicCharactersRouter } from './endpoints/characters-public.js';
 
 // Routers
 import { router as usersPublicRouter } from './endpoints/users-public.js';
@@ -142,6 +143,9 @@ app.use(cookieSession({
 }));
 
 app.use(setUserDataMiddleware);
+
+// Public, read‑only character API (no auth, no CSRF)
+app.use('/api/public/characters', publicCharactersRouter);
 
 // CSRF Protection //
 if (!cliArgs.disableCsrf) {
