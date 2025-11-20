@@ -21,10 +21,31 @@ export const router = express.Router();
  * @returns {import('../users.js').UserDirectoryList}
  */
 function getDirectoriesForRequest(request) {
+    // 1. 显式指定的用户名（优先级最高）
+    //    支持通过 query: ?user=<handle> 或 Header: x-st-user: <handle> 传入
+    let userHandle = request.query.user ?? request.headers['x-st-user'];
+
+    // 如果是数组（例如多值 query），只取第一个
+    if (Array.isArray(userHandle)) {
+        userHandle = userHandle[0];
+    }
+
+    if (typeof userHandle === 'string' && userHandle.trim().length > 0) {
+        try {
+            return getUserDirectories(userHandle.trim());
+        } catch (error) {
+            // 如果显式用户名解析失败，打印日志后继续走后续逻辑
+            // eslint-disable-next-line no-console
+            console.error('Public characters: failed to resolve user directories for handle', userHandle, error);
+        }
+    }
+
+    // 2. 已登录用户
     if (request.user?.directories) {
         return request.user.directories;
     }
 
+    // 3. 默认用户
     return getUserDirectories(DEFAULT_USER.handle);
 }
 
